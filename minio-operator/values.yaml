@@ -59,12 +59,12 @@ console:
     host: console.local
     path: /
   spec:
-  ports:
-  - name: http
-    port: 9090
-    protocol: TCP
-    targetPort: 9090
-    nodePort: 30090
+    ports:
+    - name: http
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+      nodePort: 30090
   type: NodePort
 
 ## MinIO Tenant Definition
