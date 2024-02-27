@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  sources:
+  - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+    path: helm/minio
+    targetRevision: dev
+  - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+    path: helm/trino
+    targetRevision: dev
+  
