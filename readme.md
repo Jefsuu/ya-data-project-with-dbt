@@ -6,3 +6,11 @@ Step by step:
 - [install kubectl](https://kubernetes.io/pt-br/docs/tasks/tools/install-kubectl-linux/)
 - [install k9s](https://kubernetes.io/pt-br/docs/tasks/tools/install-kubectl-linux/)
 - [install helm](https://helm.sh/docs/intro/install/)
+
+minio:
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm pull bitnami/minio --untar
+
+trino:
+helm repo add trino https://trinodb.github.io/charts
+helm pull trino/trino --untar
