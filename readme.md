@@ -14,3 +14,5 @@ helm pull bitnami/minio --untar
 trino:
 helm repo add trino https://trinodb.github.io/charts
 helm pull trino/trino --untar
+
+minikube start --cpus=8 --memory=12g
