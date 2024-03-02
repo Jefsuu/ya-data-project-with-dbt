@@ -84,7 +84,7 @@ webhook:
   # -- Enable webhook server
   enable: true
   # -- Webhook service port
-  port: 8080
+  port: 8189
   # -- The webhook server will only operate on namespaces with this label, specified in the form key1=value1,key2=value2.
   # Empty string (default) will operate on all namespaces
   namespaceSelector: ""

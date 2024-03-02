@@ -2,8 +2,8 @@ from minio import Minio
 from minio.error import S3Error
 client = Minio(
     "localhost:9000",
-    access_key="Y8uG0MWV68ORrHZroeCy",
-    secret_key="wYac4cJcnhR3AJfj47t7inKMeb9Ac33nerpwwMQ4",
+    access_key="eWPnZFJ0aK0WHBEn4DQZ",
+    secret_key="XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK",
     secure=False,
 )
 

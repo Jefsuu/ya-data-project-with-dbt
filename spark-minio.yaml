@@ -1,24 +1,30 @@
 apiVersion: "sparkoperator.k8s.io/v1beta2"
 kind: SparkApplication
 metadata:
-  name: spark-minio
+  name: spark-minio-1
   namespace: dev
 
 spec:
+  volumes:
+    - name: spark-data
+      persistentVolumeClaim:
+        claimName: spark-pvc
+    - name: spark-work
+      emptyDir: {}
   sparkConf:
     "spark.kubernetes.file.upload.path": "s3a://spark/jars/tmp"
-    "spark.hadoop.fs.s3a.access.key": "Y8uG0MWV68ORrHZroeCy"
+    "spark.hadoop.fs.s3a.access.key": "eWPnZFJ0aK0WHBEn4DQZ"
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
     "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
     "spark.hadoop.fs.s3a.fast.upload": "true"
-    "spark.hadoop.fs.s3a.secret.key": "wYac4cJcnhR3AJfj47t7inKMeb9Ac33nerpwwMQ4"
-    "spark.hadoop.fs.s3a.endpoint": "http://10.244.0.16:9000"
+    "spark.hadoop.fs.s3a.secret.key": "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
+    "spark.hadoop.fs.s3a.endpoint": "http://10.244.0.33:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
-    "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.claimName": "OnDemand"
-    "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.storageClass": "robin"
-    "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.sizeLimit": "8Gi"
-    "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.path": "/tmp/spark-local-dir"
-    "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.readOnly": "false"
+    # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.claimName": "OnDemand"
+    # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.storageClass": "robin"
+    # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.sizeLimit": "8Gi"
+    # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.path": "/tmp/spark-local-dir"
+    # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.readOnly": "false"
     "spark.ui.port": "4041"
     "spark.driver.extraJavaOptions": "-Divy.cache.dir=/tmp -Divy.home=/tmp"
   deps:
@@ -35,33 +41,38 @@ spec:
   sparkVersion: "3.3.0"
   restartPolicy:
     type: Never
-  volumes:
-    - name: "test-volume"
-      hostPath:
-        path: "/tmp"
-        type: Directory
+  # volumes:
+  #   - name: "test-volume"
+  #     hostPath:
+  #       path: "/tmp"
+  #       type: Directory
   driver:
     env:
     - name: AWS_ACCESS_KEY_ID
-      value: "Y8uG0MWV68ORrHZroeCy"
+      value: "eWPnZFJ0aK0WHBEn4DQZ"
     - name: AWS_SECRET_ACCESS_KEY
-      value: "wYac4cJcnhR3AJfj47t7inKMeb9Ac33nerpwwMQ4"
-    cores: 1
-    coreLimit: "1200m"
-    memory: "512m"
+      value: "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
+    cores: 2
+    coreRequest: "1"
+    #coreLimit: "1200m"
+    memory: "1024m"
+    # sparkConf:
+    #   spark.task.cpus: "1"
+    #   spark.executor.cores: "4"
     labels:
       version: 3.3.0
     serviceAccount: dev-spark
     volumeMounts:
-      - name: "test-volume"
+      - name: "spark-work"
         mountPath: "/tmp"
   executor:
-    cores: 1
+    cores: 2
     instances: 1
+    coreRequest: "1"
     memory: "512m"
     labels:
       version: 3.3.0
     volumeMounts:
-      - name: "test-volume"
+      - name: "spark-work"
         mountPath: "/tmp"
   
