@@ -7,8 +7,8 @@ spec:
     storage: 10Gi
   accessModes:
     - ReadWriteOnce
-  hostPath:
-    path: volume
+  # hostPath:
+  #   path: /home/jeff/estudo/project/ya-data-project-with-dbt/volumes
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -19,5 +19,6 @@ spec:
     storage: 8Gi
   accessModes:
     - ReadWriteOnce
-  hostPath:
-    path: volume
+  # hostPath:
+  #   path: /home/jeff/estudo/project/ya-data-project-with-dbt/volumes
+    
