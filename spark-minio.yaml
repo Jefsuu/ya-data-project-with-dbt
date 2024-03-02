@@ -7,12 +7,12 @@ metadata:
 spec:
   sparkConf:
     "spark.kubernetes.file.upload.path": "s3a://spark/jars/tmp"
-    "spark.hadoop.fs.s3a.access.key": "IgXyAEVlEPqQb1gSpSku"
+    "spark.hadoop.fs.s3a.access.key": "Y8uG0MWV68ORrHZroeCy"
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
     "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
     "spark.hadoop.fs.s3a.fast.upload": "true"
-    "spark.hadoop.fs.s3a.secret.key": "9jsPZ8sIawSbXlETR4uiuqKCAmIKCnctIAeGtfYc"
-    "spark.hadoop.fs.s3a.endpoint": "http://127.0.0.1:9000"
+    "spark.hadoop.fs.s3a.secret.key": "wYac4cJcnhR3AJfj47t7inKMeb9Ac33nerpwwMQ4"
+    "spark.hadoop.fs.s3a.endpoint": "http://10.244.0.16:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
     "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.claimName": "OnDemand"
     "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.storageClass": "robin"
@@ -43,14 +43,14 @@ spec:
   driver:
     env:
     - name: AWS_ACCESS_KEY_ID
-      value: "IgXyAEVlEPqQb1gSpSku"
+      value: "Y8uG0MWV68ORrHZroeCy"
     - name: AWS_SECRET_ACCESS_KEY
-      value: "9jsPZ8sIawSbXlETR4uiuqKCAmIKCnctIAeGtfYc"
+      value: "wYac4cJcnhR3AJfj47t7inKMeb9Ac33nerpwwMQ4"
     cores: 1
     coreLimit: "1200m"
     memory: "512m"
-    # labels:
-    #   version: 3.3.0
+    labels:
+      version: 3.3.0
     serviceAccount: dev-spark
     volumeMounts:
       - name: "test-volume"
@@ -59,8 +59,8 @@ spec:
     cores: 1
     instances: 1
     memory: "512m"
-    # labels:
-    #   version: 3.1.1
+    labels:
+      version: 3.3.0
     volumeMounts:
       - name: "test-volume"
         mountPath: "/tmp"
