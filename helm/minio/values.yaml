@@ -1016,7 +1016,7 @@ persistence:
   annotations: {}
   ## @param persistence.existingClaim Name of an existing PVC to use (only in `standalone` mode)
   ##
-  existingClaim: ""
+  existingClaim: "minio-pvc"
 ## @section Volume Permissions parameters
 
 ## Init containers parameters:
