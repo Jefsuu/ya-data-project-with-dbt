@@ -13,11 +13,13 @@ spec:
       emptyDir: {}
   sparkConf:
     "spark.kubernetes.file.upload.path": "s3a://spark/jars/tmp"
-    "spark.hadoop.fs.s3a.access.key": "eWPnZFJ0aK0WHBEn4DQZ"
+    #"spark.hadoop.fs.s3a.access.key": "eWPnZFJ0aK0WHBEn4DQZ"
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
-    "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
+    #"spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
+    "spark.hadoop.fs.s3a.aws.credentials.provider": "com.amazonaws.auth.EnvironmentVariableCredentialsProvider"
     "spark.hadoop.fs.s3a.fast.upload": "true"
-    "spark.hadoop.fs.s3a.secret.key": "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
+    #"spark.hadoop.fs.s3a.secret.key": "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
+    #"spark.hadoop.fs.s3a.secret.key": "$(AWS_SECRET_ACCESS_KEY)"
     "spark.hadoop.fs.s3a.endpoint": "http://dev-minio:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
     # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.claimName": "OnDemand"
@@ -48,10 +50,19 @@ spec:
   #       type: Directory
   driver:
     env:
-    - name: AWS_ACCESS_KEY_ID
-      value: "eWPnZFJ0aK0WHBEn4DQZ"
-    - name: AWS_SECRET_ACCESS_KEY
-      value: "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
+    - name: AWS_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: minio-access-secret
+          key: accessKey
+
+      #value: "eWPnZFJ0aK0WHBEn4DQZ"
+    - name: AWS_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: minio-access-secret
+          key: secretKey
+      #value: "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
     cores: 2
     coreRequest: "2"
     #coreLimit: "1200m"
@@ -66,6 +77,20 @@ spec:
       - name: "spark-work"
         mountPath: "/tmp"
   executor:
+    env:
+    - name: AWS_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: minio-access-secret
+          key: accessKey
+
+      #value: "eWPnZFJ0aK0WHBEn4DQZ"
+    - name: AWS_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: minio-access-secret
+          key: secretKey
+      #value: "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
     cores: 2
     instances: 1
     coreRequest: "1"
