@@ -21,11 +21,11 @@ spec:
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
     path: helm/spark-operator
     targetRevision: dev
-  - path: cluster-config
-    repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    targetRevision: dev
-    directory:
-      include: '*.yaml'
+  # - path: cluster-config
+  #   repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+  #   targetRevision: dev
+  #   directory:
+  #     include: '*.yaml'
 
     
   

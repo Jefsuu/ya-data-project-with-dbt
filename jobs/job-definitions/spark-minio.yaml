@@ -18,7 +18,7 @@ spec:
     "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
     "spark.hadoop.fs.s3a.fast.upload": "true"
     "spark.hadoop.fs.s3a.secret.key": "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
-    "spark.hadoop.fs.s3a.endpoint": "http://10.244.0.33:9000"
+    "spark.hadoop.fs.s3a.endpoint": "http://dev-minio:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
     # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.claimName": "OnDemand"
     # "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.storageClass": "robin"
@@ -53,7 +53,7 @@ spec:
     - name: AWS_SECRET_ACCESS_KEY
       value: "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
     cores: 2
-    coreRequest: "1"
+    coreRequest: "2"
     #coreLimit: "1200m"
     memory: "1024m"
     # sparkConf:
