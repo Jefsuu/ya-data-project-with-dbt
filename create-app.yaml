@@ -9,9 +9,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: dev
   sources:
-  - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    path: helm/minio
-    targetRevision: dev
+  # - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+  #   path: helm/minio
+  #   targetRevision: dev
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
     path: helm/kafka
     targetRevision: dev
@@ -21,11 +21,14 @@ spec:
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
     path: helm/spark
     targetRevision: dev
-  # - path: cluster-config
-  #   repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-  #   targetRevision: dev
-  #   directory:
-  #     include: '*.yaml'
+  - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+    path: helm/trino
+    targetRevision: dev
+  - path: cluster-config/auto
+    repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+    targetRevision: dev
+    directory:
+      include: '*.yaml'
 
     
   
