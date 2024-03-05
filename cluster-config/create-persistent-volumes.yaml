@@ -22,16 +22,16 @@ spec:
   hostPath:
     path: /volumes
 
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: spark-dw-pv
-spec:
-  capacity:
-    storage: 12Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /volumes
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: spark-dw-pv
+# spec:
+#   capacity:
+#     storage: 12Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: /volumes
     
