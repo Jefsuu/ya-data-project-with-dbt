@@ -213,7 +213,7 @@ master:
       type: "RuntimeDefault"
   ## @param master.command Override default container command (useful when using custom images)
   ##
-  command: []
+  command: ["/bin/sh", "-c", "/opt/bitnami/spark/sbin/start-thriftserver.sh"]
   ## @param master.args Override default container args (useful when using custom images)
   ##
   args: []
