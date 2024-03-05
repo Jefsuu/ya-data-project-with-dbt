@@ -11,9 +11,9 @@ spec:
   sources:
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
     path: helm/minio
-    targetRevision: dev
-  - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    path: helm/trino
+  #   targetRevision: dev
+  # - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+  #   path: helm/trino
     targetRevision: dev
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
     path: helm/kafka
