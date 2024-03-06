@@ -61,7 +61,13 @@ spec:
     #   value: YOUR_AWS_SECRET_KEY
     ports:
     - containerPort: 9083
-    command: ["/bin/bash", "-c", "mv /jars/* /opt/hadoop/share/hadoop/common && /opt/hive/bin/schematool -dbType derby -initSchema && exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore --hiveconf fs.s3a.endpoint=http://dev-minio:9000"]
+    command: ["/bin/bash", "-c", 
+              "mv /jars/* /opt/hadoop/share/hadoop/common && 
+              /opt/hive/bin/schematool -dbType derby -initSchema &&
+              exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore 
+                --hiveconf fs.s3a.endpoint=http://dev-minio:9000
+                --hiveconf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
+                --hiveconf spark.hadoop.fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider"]
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
