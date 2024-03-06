@@ -67,7 +67,12 @@ spec:
               exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore 
                 --hiveconf fs.s3a.endpoint=http://dev-minio:9000
                 --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
-                --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider"]
+                --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider
+                --hiveconf fs.defaultFS=http://dev-minio:9000
+                --hiveconf fs.s3a.connection.ssl.enabled=false
+                --hiveconf fs.s3a.access.key=ydwyaHzHSZnOsX1qXlNW
+                --hiveconf fs.s3a.secret.key=unFI9HyhLk5PxOzFGl6b2xvfo8k3FfW0QgiZM7uJ
+                --hiveconf fs.s3a.path.style.access=true"]
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
