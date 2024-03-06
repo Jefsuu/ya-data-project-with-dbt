@@ -19,7 +19,7 @@ metadata:
   name: metastore-standalone
   namespace: dev
   labels:
-    name: metastore-standalone
+    app: metastore-standalone
 spec:
   initContainers:
   - name: download-dependencies
