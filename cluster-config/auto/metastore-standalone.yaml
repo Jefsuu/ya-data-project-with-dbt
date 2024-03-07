@@ -62,8 +62,8 @@ spec:
     ports:
     - containerPort: 9083
     command: ["/bin/bash", "-c", 
-              "mv /jars/* /opt/hadoop/share/hadoop/common &&
-               mv /jars/* /opt/hive/lib && 
+              "cp /jars/* /opt/hadoop/share/hadoop/common &&
+               cp /jars/* /opt/hive/lib && 
               exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
                 --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql:5432/hivemetastore?createDatabaseIfNotExist=true
                 --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
