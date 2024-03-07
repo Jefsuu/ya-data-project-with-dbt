@@ -63,7 +63,6 @@ spec:
     - containerPort: 9083
     command: ["/bin/bash", "-c", 
               "cp /jars/* /opt/hadoop/share/hadoop/common &&
-               cp /jars/* /opt/hive/lib && 
               exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
                 --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql:5432/hivemetastore?createDatabaseIfNotExist=true
                 --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
@@ -81,6 +80,7 @@ spec:
                 # /opt/hive/bin/schematool -dbType derby -initSchema &&
                 # --hiveconf fs.s3a.access.key=ydwyaHzHSZnOsX1qXlNW
                 # --hiveconf fs.s3a.secret.key=unFI9HyhLk5PxOzFGl6b2xvfo8k3FfW0QgiZM7uJ
+                # cp /jars/* /opt/hive/lib && 
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
