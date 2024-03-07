@@ -28,7 +28,7 @@ spec:
     - /bin/sh
     - -c
     - |
-      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.271/aws-java-sdk-bundle-1.11.271.jar
+      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.271/aws-java-sdk-bundle-1.11.271.jar https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
@@ -62,15 +62,23 @@ spec:
     ports:
     - containerPort: 9083
     command: ["/bin/bash", "-c", 
-              "mv /jars/* /opt/hadoop/share/hadoop/common && 
-              /opt/hive/bin/schematool -dbType derby -initSchema &&
-              exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore 
+              "mv /jars/* /opt/hadoop/share/hadoop/common &&
+               mv /jars/* /opt/hive/lib && 
+              exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
+                --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql:5432/hivemetastore?createDatabaseIfNotExist=true
+                --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+                --hiveconf javax.jdo.option.ConnectionUserName=postgres
+                --hiveconf javax.jdo.option.ConnectionPassword=1234
+                --hiveconf datanucleus.autoCreateSchema=true
+                --hiveconf datanucleus.fixedDatastore=true
+                --hiveconf datanucleus.autoCreateTables=true
                 --hiveconf fs.s3a.endpoint=http://dev-minio:9000
                 --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
                 --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider
                 --hiveconf fs.defaultFS=http://dev-minio:9000
                 --hiveconf fs.s3a.connection.ssl.enabled=false
                 --hiveconf fs.s3a.path.style.access=true"]
+                # /opt/hive/bin/schematool -dbType derby -initSchema &&
                 # --hiveconf fs.s3a.access.key=ydwyaHzHSZnOsX1qXlNW
                 # --hiveconf fs.s3a.secret.key=unFI9HyhLk5PxOzFGl6b2xvfo8k3FfW0QgiZM7uJ
     volumeMounts:
