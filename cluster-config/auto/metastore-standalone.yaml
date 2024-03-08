@@ -64,14 +64,14 @@ spec:
     - containerPort: 9083
     command: ["/bin/bash", "-c", 
               "cp /jars/* /opt/hadoop/share/hadoop/common &&
-              /opt/hive/bin/schematool -dbType mysql -initSchema
-              -url jdbc:mysql://dev-mariadb:3306/metastore_db
+              /opt/hive/bin/schematool -dbType mysql -initSchema --verbose
+              -url jdbc:mysql://dev-mariadb:3306/my_database
               -driver com.mysql.cj.jdbc.Driver
               -userName dev
               -passWord dev1234
               -servers dev-mariadb:3306
-
-              --verbose &&
+              -upgrade
+              &&
               /opt/hive/bin/start-metastore --hiveconf hive.aux.jars.path=file:///jars/mysql-connector-j-8.3.0.jar
                 --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://dev-mariadb:3306/metastore_db?createDatabaseIfNotExist=true
                 --hiveconf javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
