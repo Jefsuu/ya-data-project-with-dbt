@@ -67,7 +67,7 @@ spec:
               /opt/hive/bin/schematool -dbType postgres -initSchema &&
               exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
                 --hiveconf hive.aux.jars.path=/jars/postgresql-42.7.2.jar
-                --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql:5432/metastore_db?createDatabaseIfNotExist=true
+                --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql.dev.svc.cluster.local:5432/metastore_db?createDatabaseIfNotExist=true
                 --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
                 --hiveconf javax.jdo.option.ConnectionUserName=postgres
                 --hiveconf javax.jdo.option.ConnectionPassword=1234
@@ -85,6 +85,30 @@ spec:
                 # --hiveconf fs.s3a.secret.key=unFI9HyhLk5PxOzFGl6b2xvfo8k3FfW0QgiZM7uJ
                 # cp /jars/* /opt/hive/lib && 
                 # --hiveconf hive.aux.jars.path=file:///jars/postgresql-42.7.2.jar
+
+  # command: ["/bin/bash", "-c", 
+  #             "cp /jars/* /opt/hadoop/share/hadoop/common &&
+  #             /opt/hive/bin/schematool -dbType postgres -initSchema &&
+  #             exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
+  #               --hiveconf hive.aux.jars.path=/jars/postgresql-42.7.2.jar
+  #               --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql.dev.svc.cluster.local:5432/metastore_db?createDatabaseIfNotExist=true
+  #               --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+  #               --hiveconf javax.jdo.option.ConnectionUserName=postgres
+  #               --hiveconf javax.jdo.option.ConnectionPassword=1234
+  #               --hiveconf datanucleus.autoCreateSchema=true
+  #               --hiveconf datanucleus.fixedDatastore=true
+  #               --hiveconf datanucleus.autoCreateTables=true
+  #               --hiveconf fs.s3a.endpoint=http://dev-minio:9000
+  #               --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
+  #               --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider
+  #               --hiveconf fs.defaultFS=http://dev-minio:9000
+  #               --hiveconf fs.s3a.connection.ssl.enabled=false
+  #               --hiveconf fs.s3a.path.style.access=true"]
+  #               # /opt/hive/bin/schematool -dbType derby -initSchema &&
+  #               # --hiveconf fs.s3a.access.key=ydwyaHzHSZnOsX1qXlNW
+  #               # --hiveconf fs.s3a.secret.key=unFI9HyhLk5PxOzFGl6b2xvfo8k3FfW0QgiZM7uJ
+  #               # cp /jars/* /opt/hive/lib && 
+  #               # --hiveconf hive.aux.jars.path=file:///jars/postgresql-42.7.2.jar
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
