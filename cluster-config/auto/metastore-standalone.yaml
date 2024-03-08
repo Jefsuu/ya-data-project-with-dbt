@@ -64,7 +64,7 @@ spec:
     command: ["/bin/bash", "-c", 
               "cp /jars/* /opt/hadoop/share/hadoop/common &&
               exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
-                --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql:5432/hivemetastore?createDatabaseIfNotExist=true
+                --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db
                 --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
                 --hiveconf javax.jdo.option.ConnectionUserName=postgres
                 --hiveconf javax.jdo.option.ConnectionPassword=1234
@@ -81,6 +81,7 @@ spec:
                 # --hiveconf fs.s3a.access.key=ydwyaHzHSZnOsX1qXlNW
                 # --hiveconf fs.s3a.secret.key=unFI9HyhLk5PxOzFGl6b2xvfo8k3FfW0QgiZM7uJ
                 # cp /jars/* /opt/hive/lib && 
+                # --hiveconf hive.aux.jars.path=file:///jars/postgresql-42.7.2.jar
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
