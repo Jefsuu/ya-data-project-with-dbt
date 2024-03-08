@@ -28,7 +28,8 @@ spec:
     - /bin/sh
     - -c
     - |
-      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.271/aws-java-sdk-bundle-1.11.271.jar https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar
+      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar  https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar
+    #https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.271/aws-java-sdk-bundle-1.11.271.jar
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
@@ -65,8 +66,8 @@ spec:
               "cp /jars/* /opt/hadoop/share/hadoop/common &&
               /opt/hive/bin/schematool -dbType postgres -initSchema &&
               exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
-                --hiveconf hive.aux.jars.path=file:///jars/postgresql-42.7.2.jar
-                --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db
+                --hiveconf hive.aux.jars.path=/jars/postgresql-42.7.2.jar
+                --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://dev-postgresql:5432/metastore_db?createDatabaseIfNotExist=true
                 --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
                 --hiveconf javax.jdo.option.ConnectionUserName=postgres
                 --hiveconf javax.jdo.option.ConnectionPassword=1234
