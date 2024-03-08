@@ -63,7 +63,9 @@ spec:
     - containerPort: 9083
     command: ["/bin/bash", "-c", 
               "cp /jars/* /opt/hadoop/share/hadoop/common &&
+              /opt/hive/bin/schematool -dbType postgres -initSchema &&
               exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore
+                --hiveconf hive.aux.jars.path=file:///jars/postgresql-42.7.2.jar
                 --hiveconf javax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db
                 --hiveconf javax.jdo.option.ConnectionDriverName=org.postgresql.Driver
                 --hiveconf javax.jdo.option.ConnectionUserName=postgres
