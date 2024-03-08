@@ -41,6 +41,8 @@ spec:
         memory: 1G
         cpu: "1"
     env:
+    - name: IS_RESUME
+      value: "true"
     - name: SERVICE_NAME
       value: "metastore"
     - name: AWS_ACCESS_KEY
@@ -64,28 +66,38 @@ spec:
     - containerPort: 9083
     command: ["/bin/bash", "-c", 
               "cp /jars/* /opt/hadoop/share/hadoop/common &&
-              /opt/hive/bin/schematool -dbType mysql -initSchema --verbose
-              -url jdbc:mysql://dev-mariadb:3306/my_database
-              -driver com.mysql.cj.jdbc.Driver
-              -userName dev
-              -passWord dev1234
+              if ! /opt/hive/bin/schematool -info -dbType mysql -userName dev -passWord dev1234 -url jdbc:mysql://dev-mariadb:3306/my_database?createDatabaseIfNotExist=true; then
+              /opt/hive/bin/schematool -dbType mysql -ifNotExists -initSchema  --verbose \
+              -url jdbc:mysql://dev-mariadb:3306/my_database?createDatabaseIfNotExist=true \
+              -driver com.mysql.cj.jdbc.Driver \
+              -userName dev \
+              -passWord dev1234 \
               -servers dev-mariadb:3306
-              -upgrade
-              &&
-              /opt/hive/bin/start-metastore --hiveconf hive.aux.jars.path=file:///jars/mysql-connector-j-8.3.0.jar
-                --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://dev-mariadb:3306/metastore_db?createDatabaseIfNotExist=true
-                --hiveconf javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
-                --hiveconf javax.jdo.option.ConnectionUserName=dev
-                --hiveconf javax.jdo.option.ConnectionPassword=dev1234
-                --hiveconf datanucleus.autoCreateSchema=true
-                --hiveconf datanucleus.fixedDatastore=true
-                --hiveconf datanucleus.autoCreateTables=true
-                --hiveconf fs.s3a.endpoint=http://dev-minio:9000
-                --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
-                --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider
-                --hiveconf fs.defaultFS=http://dev-minio:9000
-                --hiveconf fs.s3a.connection.ssl.enabled=false
-                --hiveconf fs.s3a.path.style.access=true"]
+              fi"]
+
+
+# /opt/hive/bin/start-metastore --hiveconf hive.aux.jars.path=file:///jars/mysql-connector-j-8.3.0.jar
+#                 --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://dev-mariadb:3306/metastore_db?createDatabaseIfNotExist=true
+#                 --hiveconf javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
+#                 --hiveconf javax.jdo.option.ConnectionUserName=dev
+#                 --hiveconf javax.jdo.option.ConnectionPassword=dev1234
+#                 --hiveconf datanucleus.autoCreateSchema=true
+#                 --hiveconf datanucleus.fixedDatastore=true
+#                 --hiveconf datanucleus.autoCreateTables=true
+#                 --hiveconf fs.s3a.endpoint=http://dev-minio:9000
+#                 --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
+#                 --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider
+#                 --hiveconf fs.defaultFS=http://dev-minio:9000
+#                 --hiveconf fs.s3a.connection.ssl.enabled=false
+#                 --hiveconf fs.s3a.path.style.access=true
+
+
+
+
+
+
+
+
                 # /opt/hive/bin/schematool -dbType derby -initSchema &&
                 # --hiveconf fs.s3a.access.key=ydwyaHzHSZnOsX1qXlNW
                 # --hiveconf fs.s3a.secret.key=unFI9HyhLk5PxOzFGl6b2xvfo8k3FfW0QgiZM7uJ
