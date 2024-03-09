@@ -79,3 +79,6 @@ spec:
   volumes:
   - name: jar-volume
     emptyDir: {}
+  - name: metastore-data
+    persistentVolumeClaim:
+      claimName: metastore-pvc
