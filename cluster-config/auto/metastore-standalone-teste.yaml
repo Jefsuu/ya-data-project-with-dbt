@@ -28,7 +28,7 @@ spec:
     - /bin/sh
     - -c
     - |
-      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar  https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar
+      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar  https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar
     #https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.271/aws-java-sdk-bundle-1.11.271.jar
     volumeMounts:
     - name: jar-volume
@@ -83,10 +83,9 @@ spec:
       - |
         /bin/bash <<'EOF'
         cp /jars/* /opt/hadoop/share/hadoop/common && 
-        cp /jars/* /opt/hive &&
         echo 'files copied'
         echo 'getting info of the schema if exists'
-        /opt/hive/bin/schematool -info -dbType mysql -userName dev -passWord dev1234 \
+        /opt/hive/bin/schematool -info -dbType mysql -userName root -passWord root1234 \
         -url jdbc:mysql://dev-mariadb:3306/my_database 2>&1 | tee testing_schema.txt
         echo 'verifying if schema exists'
         if grep -q '*** schemaTool failed ***' testing_schema.txt; then
@@ -94,22 +93,17 @@ spec:
           /opt/hive/bin/schematool -dbType mysql -initSchema --verbose \
           -url jdbc:mysql://dev-mariadb:3306/my_database?createDatabaseIfNotExist=true \
           -driver com.mysql.cj.jdbc.Driver \
-          -userName dev \
-          -passWord dev1234 \
-          -servers dev-mariadb:3306
+          -userName root \
+          -passWord root1234
         else
           echo 'schema already exists, skipping to init metastore'
         fi
 
         exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore \
-          --hiveconf hive.aux.jars.path=file://mysql-connector-j-8.3.0.jar  \
-          --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://dev-mariadb:3306/my_database?createDatabaseIfNotExist=true \
+          --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://dev-mariadb:3306/my_database \
           --hiveconf javax.jdo.option.ConnectionDriverName=com.mysql.cj.jdbc.Driver \
-          --hiveconf javax.jdo.option.ConnectionUserName=dev \
-          --hiveconf javax.jdo.option.ConnectionPassword=dev1234 \
-          --hiveconf datanucleus.autoCreateSchema=false \
-          --hiveconf datanucleus.fixedDatastore=true \
-          --hiveconf datanucleus.autoCreateTables=true \
+          --hiveconf javax.jdo.option.ConnectionUserName=root \
+          --hiveconf javax.jdo.option.ConnectionPassword=root1234 \
           --hiveconf fs.s3a.endpoint=http://dev-minio:9000 \
           --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem \
           --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider \
@@ -133,3 +127,7 @@ spec:
 #           --hiveconf datanucleus.ConnectionPassword=dev1234 \
 #                     --hiveconf datanucleus.connectionPoolingType=DBCP \
 # --hiveconf hive.aux.jars.path=/jars/mysql-connector-j-8.3.0.jar  \
+
+          # --hiveconf datanucleus.autoCreateSchema=true \
+          # --hiveconf datanucleus.fixedDatastore=true \
+          # --hiveconf datanucleus.autoCreateTables=true \
