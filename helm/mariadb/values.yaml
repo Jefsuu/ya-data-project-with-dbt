@@ -117,7 +117,7 @@ auth:
   ## @param auth.database Name for a custom database to create
   ## ref: https://github.com/bitnami/containers/blob/main/bitnami/mariadb/README.md#creating-a-database-on-first-run
   ##
-  database: metastore_db
+  database: ""
   ## @param auth.username Name for a custom user to create
   ## ref: https://github.com/bitnami/containers/blob/main/bitnami/mariadb/README.md#creating-a-database-user-on-first-run
   ##
