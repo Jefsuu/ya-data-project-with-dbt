@@ -1,0 +1,132 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-metastore
+  namespace: dev
+  labels:
+    app: hive-metastore
+spec:
+  ports:
+  - port: 9083
+  selector:
+    app: hive-metastore
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hive-metastore
+  namespace: dev
+  labels:
+    app: hive-metastore
+spec:
+  initContainers:
+  - name: download-dependencies
+    image: busybox:1.28
+    command:
+    - /bin/sh
+    - -c
+    - |
+      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.676/aws-java-sdk-bundle-1.12.676.jar
+    volumeMounts:
+    - name: jar-volume
+      mountPath: /jars
+  containers:
+  - name: hive-metastore
+    image: apache/hive:3.1.3
+    resources:
+      limits:
+        memory: 1G
+        cpu: "1"
+    env:
+    - name: SERVICE_NAME
+      value: "metastore"
+    - name: AWS_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: minio-access-secret
+          key: accessKey
+
+      #value: "eWPnZFJ0aK0WHBEn4DQZ"
+    - name: AWS_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: minio-access-secret
+          key: secretKey
+      #value: "XyzlHA7iL5JihAmzkoar0GP1gwnTemEj9ojMolUK"
+    # - name: AWS_ACCESS_KEY_ID
+    #   value: YOUR_AWS_ACCESS_KEY
+    # - name: AWS_SECRET_ACCESS_KEY
+    #   value: YOUR_AWS_SECRET_KEY
+    ports:
+    - containerPort: 9083
+    # command: ["/bin/bash", "-c", 
+    #           "cp /jars/* /opt/hadoop/share/hadoop/common &&
+    #           /opt/hive/bin/schematool -dbType mysql -initSchema
+    #           -url jdbc:mysql://mysql:3306/my_database?createDatabaseIfNotExist=true
+    #           -driver com.mysql.cj.jdbc.Driver
+    #           -userName dev
+    #           -passWord dev1234
+    #           -servers mysql:3306"
+    #           ]
+    # command: ["/bin/bash", "-c", 
+    #           "cp /jars/* /opt/hadoop/share/hadoop/common &&
+    #           /opt/hive/bin/schematool 
+    #           -info 
+    #           -dbType mysql -userName dev -passWord dev1234 -url jdbc:mysql://mysql:3306/my_database"
+    #           ]
+    command:
+      - sh
+      - "-c"
+      - |
+        /bin/bash <<'EOF'
+        cp /jars/* /opt/hadoop/share/hadoop/common && 
+        echo 'files copied'
+        echo 'getting info of the schema if exists'
+        /opt/hive/bin/schematool -info -dbType mysql -userName root -passWord root1234 \
+        -url jdbc:mysql://mysql:3306/my_database 2>&1 | tee testing_schema.txt
+        echo 'verifying if schema exists'
+        if grep -q '*** schemaTool failed ***' testing_schema.txt; then
+          echo 'schema dont exists, running init schema'
+          /opt/hive/bin/schematool -dbType mysql -initSchema --verbose \
+          -url jdbc:mysql://mysql:3306/my_database?createDatabaseIfNotExist=true \
+          -driver com.mysql.cj.jdbc.Driver \
+          -userName root \
+          -passWord root1234
+        else
+          echo 'schema already exists, skipping to init metastore'
+        fi
+
+        exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore \
+          --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://mysql:3306/my_database \
+          --hiveconf javax.jdo.option.ConnectionDriverName=com.mysql.cj.jdbc.Driver \
+          --hiveconf javax.jdo.option.ConnectionUserName=root \
+          --hiveconf javax.jdo.option.ConnectionPassword=root1234 \
+          --hiveconf fs.s3a.endpoint=http://dev-minio:9000 \
+          --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem \
+          --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider \
+          --hiveconf fs.defaultFS=http://dev-minio:9000 \
+          --hiveconf fs.s3a.connection.ssl.enabled=false \
+          --hiveconf fs.s3a.path.style.access=true
+
+        EOF
+
+    #cat testing_schema.txt | grep '*** schemaTool failed ***'; echo $?     
+    volumeMounts:
+    - name: jar-volume
+      mountPath: /jars
+  volumes:
+  - name: jar-volume
+    emptyDir: {}
+
+# --hiveconf datanucleus.ConnectionDriverName=com.mysql.cj.jdbc.Driver \
+#           --hiveconf datanucleus.ConnectionURL=jdbc:mysql://mysql:3306/my_database \
+#           --hiveconf datanucleus.ConnectionUserName=dev \
+#           --hiveconf datanucleus.ConnectionPassword=dev1234 \
+#                     --hiveconf datanucleus.connectionPoolingType=DBCP \
+# --hiveconf hive.aux.jars.path=/jars/mysql-connector-j-8.3.0.jar  \
+
+          # --hiveconf datanucleus.autoCreateSchema=true \
+          # --hiveconf datanucleus.fixedDatastore=true \
+          # --hiveconf datanucleus.autoCreateTables=true \
