@@ -28,8 +28,7 @@ spec:
     - /bin/sh
     - -c
     - |
-      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar  https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar
-    #https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.271/aws-java-sdk-bundle-1.11.271.jar
+      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.2/postgresql-42.7.2.jar https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.676/aws-java-sdk-bundle-1.12.676.jar
     volumeMounts:
     - name: jar-volume
       mountPath: /jars
@@ -65,17 +64,17 @@ spec:
     # command: ["/bin/bash", "-c", 
     #           "cp /jars/* /opt/hadoop/share/hadoop/common &&
     #           /opt/hive/bin/schematool -dbType mysql -initSchema
-    #           -url jdbc:mysql://dev-mariadb:3306/my_database?createDatabaseIfNotExist=true
+    #           -url jdbc:mysql://mysql:3306/my_database?createDatabaseIfNotExist=true
     #           -driver com.mysql.cj.jdbc.Driver
     #           -userName dev
     #           -passWord dev1234
-    #           -servers dev-mariadb:3306"
+    #           -servers mysql:3306"
     #           ]
     # command: ["/bin/bash", "-c", 
     #           "cp /jars/* /opt/hadoop/share/hadoop/common &&
     #           /opt/hive/bin/schematool 
     #           -info 
-    #           -dbType mysql -userName dev -passWord dev1234 -url jdbc:mysql://dev-mariadb:3306/my_database"
+    #           -dbType mysql -userName dev -passWord dev1234 -url jdbc:mysql://mysql:3306/my_database"
     #           ]
     command:
       - sh
@@ -86,12 +85,12 @@ spec:
         echo 'files copied'
         echo 'getting info of the schema if exists'
         /opt/hive/bin/schematool -info -dbType mysql -userName root -passWord root1234 \
-        -url jdbc:mysql://dev-mariadb:3306/my_database 2>&1 | tee testing_schema.txt
+        -url jdbc:mysql://mysql:3306/my_database 2>&1 | tee testing_schema.txt
         echo 'verifying if schema exists'
         if grep -q '*** schemaTool failed ***' testing_schema.txt; then
           echo 'schema dont exists, running init schema'
           /opt/hive/bin/schematool -dbType mysql -initSchema --verbose \
-          -url jdbc:mysql://dev-mariadb:3306/my_database?createDatabaseIfNotExist=true \
+          -url jdbc:mysql://mysql:3306/my_database?createDatabaseIfNotExist=true \
           -driver com.mysql.cj.jdbc.Driver \
           -userName root \
           -passWord root1234
@@ -100,7 +99,7 @@ spec:
         fi
 
         exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore \
-          --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://dev-mariadb:3306/my_database \
+          --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://mysql:3306/my_database \
           --hiveconf javax.jdo.option.ConnectionDriverName=com.mysql.cj.jdbc.Driver \
           --hiveconf javax.jdo.option.ConnectionUserName=root \
           --hiveconf javax.jdo.option.ConnectionPassword=root1234 \
@@ -122,7 +121,7 @@ spec:
     emptyDir: {}
 
 # --hiveconf datanucleus.ConnectionDriverName=com.mysql.cj.jdbc.Driver \
-#           --hiveconf datanucleus.ConnectionURL=jdbc:mysql://dev-mariadb:3306/my_database \
+#           --hiveconf datanucleus.ConnectionURL=jdbc:mysql://mysql:3306/my_database \
 #           --hiveconf datanucleus.ConnectionUserName=dev \
 #           --hiveconf datanucleus.ConnectionPassword=dev1234 \
 #                     --hiveconf datanucleus.connectionPoolingType=DBCP \

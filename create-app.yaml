@@ -27,9 +27,9 @@ spec:
   # - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
   #   path: helm/postgresql
   #   targetRevision: dev
-  - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    path: helm/mysql
-    targetRevision: dev
+  # - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+  #   path: helm/mysql
+  #   targetRevision: dev
   # - path: cluster-config/auto
   #   repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
   #   targetRevision: dev
