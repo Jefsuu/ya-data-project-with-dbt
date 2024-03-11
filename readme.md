@@ -15,6 +15,6 @@ trino:
 helm repo add trino https://trinodb.github.io/charts
 helm pull trino/trino --untar
 
-minikube start --cpus=8 --memory=8g
+minikube start --cpus=6 --memory=8g
 
 helm install my-release spark-operator/spark-operator --namespace spark-operator --create-namespace --set sparkJobNamespace=spark-operator --set webhook.enable=true --set webhook.port=443 --set webhook.namespaceSelector=""

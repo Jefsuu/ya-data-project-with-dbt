@@ -58,13 +58,15 @@ spec:
     - name: DATABASE_HOST
       value: "mysql-metastore"
     - name: DATABASE_USER
-      secretKeyRef: 
-        name: mysql-secret
-        key: user
+      valueFrom:
+        secretKeyRef: 
+          name: mysql-secret
+          key: user
     - name: DATABASE_PASSWORD
-      secretKeyRef: 
-        name: mysql-secret
-        key: password
+      valueFrom:
+        secretKeyRef: 
+          name: mysql-secret
+          key: password
     - name: MINIO_URL
       value: "http://dev-minio:9000"
     ports:
