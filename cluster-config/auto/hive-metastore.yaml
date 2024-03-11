@@ -55,6 +55,18 @@ spec:
         secretKeyRef:
           name: minio-access-secret
           key: secretKey
+    - name: DATABASE_HOST
+      value: "mysql-metastore"
+    - name: DATABASE_USER
+      secretKeyRef: 
+        name: mysql-secret
+        key: user
+    - name: DATABASE_PASSWORD
+      secretKeyRef: 
+        name: mysql-secret
+        key: password
+    - name: MINIO_URL
+      value: "http://dev-minio:9000"
     ports:
     - containerPort: 9083
     command:
@@ -65,29 +77,29 @@ spec:
         cp /jars/* /opt/hadoop/share/hadoop/common && 
         echo 'files copied'
         echo 'getting info of the schema if exists'
-        /opt/hive/bin/schematool -info -dbType mysql -userName root -passWord root1234 \
-        -url jdbc:mysql://mysql-metastore/metastore_db 2>&1 | tee testing_schema.txt
+        /opt/hive/bin/schematool -info -dbType mysql -userName $DATABASE_USER -passWord $DATABASE_PASSWORD \
+        -url jdbc:mysql://$DATABASE_HOST/metastore_db 2>&1 | tee testing_schema.txt
         echo 'verifying if schema exists'
         if grep -q '*** schemaTool failed ***' testing_schema.txt; then
           echo 'schema dont exists, running init schema'
           /opt/hive/bin/schematool -dbType mysql -initSchema --verbose \
-          -url jdbc:mysql://mysql-metastore/metastore_db?createDatabaseIfNotExist=true \
+          -url jdbc:mysql://$DATABASE_HOST/metastore_db?createDatabaseIfNotExist=true \
           -driver com.mysql.cj.jdbc.Driver \
-          -userName root \
-          -passWord root1234
+          -userName $DATABASE_USER \
+          -passWord $DATABASE_PASSWORD
         else
           echo 'schema already exists, skipping to init metastore'
         fi
 
         exec /opt/hive/bin/hive --skiphadoopversion --skiphbasecp --service metastore \
-          --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://mysql-metastore/metastore_db \
+          --hiveconf javax.jdo.option.ConnectionURL=jdbc:mysql://$DATABASE_HOST/metastore_db \
           --hiveconf javax.jdo.option.ConnectionDriverName=com.mysql.cj.jdbc.Driver \
-          --hiveconf javax.jdo.option.ConnectionUserName=root \
-          --hiveconf javax.jdo.option.ConnectionPassword=root1234 \
-          --hiveconf fs.s3a.endpoint=http://dev-minio:9000 \
+          --hiveconf javax.jdo.option.ConnectionUserName=$DATABASE_USER \
+          --hiveconf javax.jdo.option.ConnectionPassword=$DATABASE_PASSWORD \
+          --hiveconf fs.s3a.endpoint=$MINIO_URL \
           --hiveconf fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem \
           --hiveconf fs.s3a.aws.credentials.provider=com.amazonaws.auth.EnvironmentVariableCredentialsProvider \
-          --hiveconf fs.defaultFS=http://dev-minio:9000 \
+          --hiveconf fs.defaultFS=$MINIO_URL \
           --hiveconf fs.s3a.connection.ssl.enabled=false \
           --hiveconf fs.s3a.path.style.access=true
 
