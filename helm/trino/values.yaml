@@ -238,7 +238,7 @@ initContainers:
             break
           fi
         done
-        EOF
+      EOF
     
   worker:
   - name: check-minio-secret
@@ -263,7 +263,7 @@ initContainers:
             break
           fi
         done
-        EOF
+      EOF
   # coordinator:
   #   - name: init-coordinator
   #     image: busybox:1.28
