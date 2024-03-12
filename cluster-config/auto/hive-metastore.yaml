@@ -12,47 +12,6 @@ spec:
     app: hive-metastore
 
 ---
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: minio-secret-check
-  namespace: dev
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: minio-secret-check-binding
-  namespace: dev
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: minio-secret-check
-subjects:
-- kind: ServiceAccount
-  name: service-minio-secret-check
-  namespace: dev
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: service-minio-secret-check
-  namespace: dev
-
----
-
 apiVersion: v1
 kind: Pod
 metadata:
