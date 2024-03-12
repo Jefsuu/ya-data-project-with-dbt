@@ -215,29 +215,55 @@ env:
 envFrom: []
 
 initContainers:
-- name: check-minio-secret
-  image: curlimages/curl:latest
-  env:
-  - name: NAMESPACE
-    value: dev
-  - name: SECRET_NAME
-    value: "minio-access-secret"
-  command:
-  - sh
-  - "-c"
-  - |
-    /bin/sh <<'EOF'
-    while true; do
-        response=$(curl -s -o /dev/null -w "%{http_code}" --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes.default:443/api/v1/namespaces/$NAMESPACE/secrets/$SECRET_NAME)
-        if [ $response -ne 200 ]; then
-          echo "Secret not found, waiting 5 seconds..."
-          sleep 5
-        else
-          echo "Secret found!"
-          break
-        fi
-      done
-      EOF
+  coordinator:
+  - name: check-minio-secret
+    image: curlimages/curl:latest
+    env:
+    - name: NAMESPACE
+      value: dev
+    - name: SECRET_NAME
+      value: "minio-access-secret"
+    command:
+    - sh
+    - "-c"
+    - |
+      /bin/sh <<'EOF'
+      while true; do
+          response=$(curl -s -o /dev/null -w "%{http_code}" --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes.default:443/api/v1/namespaces/$NAMESPACE/secrets/$SECRET_NAME)
+          if [ $response -ne 200 ]; then
+            echo "Secret not found, waiting 5 seconds..."
+            sleep 5
+          else
+            echo "Secret found!"
+            break
+          fi
+        done
+        EOF
+    
+  worker:
+  - name: check-minio-secret
+    image: curlimages/curl:latest
+    env:
+    - name: NAMESPACE
+      value: dev
+    - name: SECRET_NAME
+      value: "minio-access-secret"
+    command:
+    - sh
+    - "-c"
+    - |
+      /bin/sh <<'EOF'
+      while true; do
+          response=$(curl -s -o /dev/null -w "%{http_code}" --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes.default:443/api/v1/namespaces/$NAMESPACE/secrets/$SECRET_NAME)
+          if [ $response -ne 200 ]; then
+            echo "Secret not found, waiting 5 seconds..."
+            sleep 5
+          else
+            echo "Secret found!"
+            break
+          fi
+        done
+        EOF
   # coordinator:
   #   - name: init-coordinator
   #     image: busybox:1.28
