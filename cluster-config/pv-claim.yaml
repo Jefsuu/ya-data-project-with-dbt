@@ -26,20 +26,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: metastore-pvc
-  namespace: dev
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 8Gi
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
   name: mysql-pv-claim
+  namespace: dev
 spec:
   storageClassName: manual
   accessModes:

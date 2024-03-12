@@ -24,24 +24,12 @@ spec:
   hostPath:
     path: /volumes
 
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: metastore-pv
-  namespace: dev
-spec:
-  capacity:
-    storage: 8Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /volumes
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  namespace: dev
   name: mysql-pv-volume
   labels:
     type: local

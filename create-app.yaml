@@ -10,27 +10,18 @@ spec:
     namespace: dev
   sources:
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    path: helm/minio
+    path: resources/helm/minio
     targetRevision: dev
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    path: helm/kafka
+    path: resources/helm/kafka
     targetRevision: dev
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    path: helm/spark-operator
+    path: resources/helm/spark-operator
     targetRevision: dev
-  # - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-  #   path: helm/spark
-  #   targetRevision: dev
   - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-    path: helm/trino
+    path: resources/helm/trino
     targetRevision: dev
-  # - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-  #   path: helm/postgresql
-  #   targetRevision: dev
-  # - repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
-  #   path: helm/mysql
-  #   targetRevision: dev
-  - path: cluster-config/auto
+  - path: resources/auto
     repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
     targetRevision: dev
     directory:
