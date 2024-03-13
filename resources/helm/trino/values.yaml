@@ -81,7 +81,6 @@ accessControl:
             "user": "admin",
             "schema": ".*",
             "owner": true,
-            "allow": "all"
           } 
         ],
         "tables" : [
