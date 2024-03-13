@@ -75,7 +75,7 @@ accessControl:
             "catalog": "dev",
             "allow": "all"
           }
-        ]
+        ],
         "schemas": [
           {
             "user": "admin",
@@ -83,7 +83,7 @@ accessControl:
             "owner": true,
             "allow": "all"
           } 
-        ]
+        ],
         "tables" : [
           {
             "user": "admin",
