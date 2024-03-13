@@ -225,6 +225,7 @@ additionalCatalogs:
     hive.s3.endpoint=${ENV:MINIO_URL}
     hive.s3.path-style-access=true
     hive.s3.ssl.enabled=false
+    hive.allow-drop-table=true
 
 # Array of EnvVar (https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvar-v1-core)
 env: 
