@@ -62,7 +62,38 @@ server:
     #      periodSeconds: 15
     #    selectPolicy: Max
 
-accessControl: {}
+accessControl:
+  type: configmap
+  refreshPeriod: 60s
+  configFile: "rules.json"
+  rules:
+    rules.json: |-
+      {
+        "catalogs": [
+          {
+            "user": "admin",
+            "catalog": "dev",
+            "allow": "all"
+          }
+        ]
+        "schemas": [
+          {
+            "user": "admin",
+            "schema": ".*",
+            "owner": true,
+            "allow": "all"
+          } 
+        ]
+        "tables" : [
+          {
+            "user": "admin",
+            "privileges": ["SELECT", "INSERT", "DELETE", "OWNERSHIP", "GRANT_SELECT"],
+            "catalog": ".*",
+            "schema": ".*"
+          }
+        ]
+      }
+
   # type: configmap
   # refreshPeriod: 60s
   # # Rules file is mounted to /etc/trino/access-control

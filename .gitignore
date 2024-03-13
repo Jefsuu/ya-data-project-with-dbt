@@ -2,3 +2,4 @@ venv
 volumes
 querys
 checks
+dbt
