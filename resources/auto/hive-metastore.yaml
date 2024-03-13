@@ -29,9 +29,9 @@ spec:
     - -c
     - |
       /bin/sh <<'EOF'
-      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar -O hadoop-aws-3.2.2.jar \
-      https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar -O mysql-connector-j-8.2.0.jar \
-      https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.676/aws-java-sdk-bundle-1.12.676.jar -O aws-java-sdk-bundle-1.12.676.jar
+      wget -P /jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.2/hadoop-aws-3.2.2.jar
+      wget -P /jars https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar
+      wget -P /jars https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.676/aws-java-sdk-bundle-1.12.676.jar
 
       EOF
     volumeMounts:
