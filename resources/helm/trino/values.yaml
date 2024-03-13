@@ -86,7 +86,7 @@ accessControl:
         "tables" : [
           {
             "user": "admin",
-            "privileges": ["SELECT", "INSERT", "DELETE", "OWNERSHIP", "GRANT_SELECT", "DROP"],
+            "privileges": ["SELECT", "INSERT", "DELETE", "OWNERSHIP", "GRANT_SELECT"],
             "catalog": ".*",
             "schema": ".*"
           }
