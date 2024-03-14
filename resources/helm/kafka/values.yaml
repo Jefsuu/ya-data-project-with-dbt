@@ -1364,7 +1364,7 @@ service:
 externalAccess:
   ## @param externalAccess.enabled Enable Kubernetes external cluster access to Kafka brokers
   ##
-  enabled: false
+  enabled: true
   ## External IPs auto-discovery configuration
   ## An init container is used to auto-detect LB IPs or node ports by querying the K8s API
   ## Note: RBAC might be required
@@ -1372,7 +1372,7 @@ externalAccess:
   autoDiscovery:
     ## @param externalAccess.autoDiscovery.enabled Enable using an init container to auto-detect external IPs/ports by querying the K8s API
     ##
-    enabled: false
+    enabled: true
     ## Bitnami Kubectl image
     ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
     ## @param externalAccess.autoDiscovery.image.registry [default: REGISTRY_NAME] Init container auto-discovery image registry
@@ -1745,7 +1745,7 @@ rbac:
   ## binding Kafka ServiceAccount to a role
   ## that allows Kafka pods querying the K8s API
   ##
-  create: false
+  create: true
 ## @section Metrics parameters
 ##
 
