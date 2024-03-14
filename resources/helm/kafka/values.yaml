@@ -646,7 +646,7 @@ controller:
       drop: ["ALL"]
   ## @param controller.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
   ## @param controller.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -1054,7 +1054,7 @@ broker:
       drop: ["ALL"]
   ## @param broker.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
   ## @param broker.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -1364,7 +1364,7 @@ service:
 externalAccess:
   ## @param externalAccess.enabled Enable Kubernetes external cluster access to Kafka brokers
   ##
-  enabled: true
+  enabled: false
   ## External IPs auto-discovery configuration
   ## An init container is used to auto-detect LB IPs or node ports by querying the K8s API
   ## Note: RBAC might be required
@@ -1372,7 +1372,7 @@ externalAccess:
   autoDiscovery:
     ## @param externalAccess.autoDiscovery.enabled Enable using an init container to auto-detect external IPs/ports by querying the K8s API
     ##
-    enabled: true
+    enabled: false
     ## Bitnami Kubectl image
     ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
     ## @param externalAccess.autoDiscovery.image.registry [default: REGISTRY_NAME] Init container auto-discovery image registry
@@ -1459,7 +1459,7 @@ externalAccess:
       ## @param externalAccess.controller.service.ports.external Kafka port used for external access when service type is LoadBalancer
       ##
       ports:
-        external: 9095
+        external: 9094
       ## @param externalAccess.controller.service.loadBalancerIPs Array of load balancer IPs for each Kafka broker. Length must be the same as replicaCount
       ## e.g:
       ## loadBalancerIPs:
@@ -1745,7 +1745,7 @@ rbac:
   ## binding Kafka ServiceAccount to a role
   ## that allows Kafka pods querying the K8s API
   ##
-  create: true
+  create: false
 ## @section Metrics parameters
 ##
 
