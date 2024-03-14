@@ -1459,7 +1459,7 @@ externalAccess:
       ## @param externalAccess.controller.service.ports.external Kafka port used for external access when service type is LoadBalancer
       ##
       ports:
-        external: 9094
+        external: 9095
       ## @param externalAccess.controller.service.loadBalancerIPs Array of load balancer IPs for each Kafka broker. Length must be the same as replicaCount
       ## e.g:
       ## loadBalancerIPs:
