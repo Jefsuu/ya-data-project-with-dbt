@@ -655,7 +655,7 @@ controller:
       drop: ["ALL"]
   ## @param controller.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: false
+  automountServiceAccountToken: true
   ## @param controller.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -1063,7 +1063,7 @@ broker:
       drop: ["ALL"]
   ## @param broker.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: false
+  automountServiceAccountToken: true
   ## @param broker.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -1941,7 +1941,7 @@ metrics:
         drop: ["ALL"]
     ## @param metrics.kafka.automountServiceAccountToken Mount Service Account token in pod
     ##
-    automountServiceAccountToken: true
+    automountServiceAccountToken: false
     ## @param metrics.kafka.hostAliases Kafka exporter pods host aliases
     ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
     ##
