@@ -198,7 +198,7 @@ listeners:
   ## @param listeners.advertisedListeners Overrides the Kafka 'advertised.listener' configuration setting.
   ## @param listeners.securityProtocolMap Overrides the Kafka 'security.protocol.map' configuration setting.
   overrideListeners: ""
-  advertisedListeners: "127.0.0.1:9092 "
+  advertisedListeners: ""
   securityProtocolMap: ""
 ## @section Kafka SASL parameters
 ## Kafka SASL settings for authentication, required if SASL_PLAINTEXT or SASL_SSL listeners are configured
@@ -599,7 +599,7 @@ controller:
   ## @param controller.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if controller.resources is set (controller.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  resourcesPreset: "none"
   ## @param controller.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -655,7 +655,7 @@ controller:
       drop: ["ALL"]
   ## @param controller.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
   ## @param controller.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -809,7 +809,7 @@ controller:
     ## If defined, PVC must be created manually before volume will be bound
     ## The value is evaluated as a template
     ##
-    existingClaim: "kafka-pvc"
+    existingClaim: ""
     ## @param controller.persistence.storageClass PVC Storage Class for Kafka data volume
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -1063,7 +1063,7 @@ broker:
       drop: ["ALL"]
   ## @param broker.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
   ## @param broker.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -1373,7 +1373,7 @@ service:
 externalAccess:
   ## @param externalAccess.enabled Enable Kubernetes external cluster access to Kafka brokers
   ##
-  enabled: true
+  enabled: false
   ## External IPs auto-discovery configuration
   ## An init container is used to auto-detect LB IPs or node ports by querying the K8s API
   ## Note: RBAC might be required
@@ -1381,7 +1381,7 @@ externalAccess:
   autoDiscovery:
     ## @param externalAccess.autoDiscovery.enabled Enable using an init container to auto-detect external IPs/ports by querying the K8s API
     ##
-    enabled: true
+    enabled: false
     ## Bitnami Kubectl image
     ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
     ## @param externalAccess.autoDiscovery.image.registry [default: REGISTRY_NAME] Init container auto-discovery image registry
@@ -1754,7 +1754,7 @@ rbac:
   ## binding Kafka ServiceAccount to a role
   ## that allows Kafka pods querying the K8s API
   ##
-  create: true
+  create: false
 ## @section Metrics parameters
 ##
 
@@ -2302,10 +2302,7 @@ provisioning:
   ##     max.message.bytes: 64000
   ##     flush.messages: 1
   ##
-  topics:
-  - name: minio_bronze_events
-    partitions: 1
-    replicationFactor: 1
+  topics: []
   ## @param provisioning.nodeSelector Node labels for pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
