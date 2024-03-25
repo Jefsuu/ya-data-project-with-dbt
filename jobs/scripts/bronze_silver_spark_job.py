@@ -3,6 +3,7 @@ import os
 from pyspark.sql import SparkSession
 from pyspark.conf import SparkConf
 import argparse
+import json
 
 
 
@@ -15,6 +16,7 @@ parser.add_argument('--bronze_path')
 parser.add_argument('--silver_path')
 parser.add_argument('--table_name')
 parser.add_argument('--format')
+parser.add_argument('--read_options')
 
 args = parser.parse_args()
 
@@ -31,7 +33,7 @@ spark = (
     )
 
 logger.info(args)
-
-df = spark.read.format(args.format).load(f"s3a://{args.bronze_path}")
+read_options = json.loads(args.read_options)
+df = spark.read.options(**read_options).format(args.format).load(f"s3a://{args.bronze_path}")
 
 df.write.mode('overwrite').format('parquet').option("path", f"s3a://{args.silver_path}").saveAsTable(args.table_name)
