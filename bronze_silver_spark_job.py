@@ -8,7 +8,7 @@ import yaml
 from datetime import datetime
 import base64
 
-config.load_kube_config()
+config.load_incluster_config()
 k8s_api = client.CoreV1Api()
 
 # os.environ["BOOTSTRAP_SERVERS"] = 'localhost:9095'
