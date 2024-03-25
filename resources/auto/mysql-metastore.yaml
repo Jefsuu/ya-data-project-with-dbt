@@ -29,10 +29,10 @@ spec:
       containers:
       - image: mysql:latest
         name: mysql-metastore
-        resources:
-          limits:
-            memory: 1G
-            cpu: "1"
+        # resources:
+        #   limits:
+        #     memory: 1G
+        #     cpu: "1"
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:

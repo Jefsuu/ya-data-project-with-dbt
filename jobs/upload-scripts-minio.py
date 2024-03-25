@@ -47,4 +47,4 @@ def upload_file(bucket_name:str, file_name:str, file_path:str, upload_path=None,
 
 create_bucket_if_not_exists("script")
 
-upload_file(bucket_name="script", file_name="spark-minio.py", file_path="jobs/scripts/spark-minio.py")
+upload_file(bucket_name="script", file_name="bronze_silver_spark_job.py", file_path="jobs/scripts/bronze_silver_spark_job.py")
