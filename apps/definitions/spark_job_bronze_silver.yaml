@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: bronze-silver-job-cron
+  name: bronze-silver-job
   namespace: dev
 spec:
-  schedule: "*/2 * * * *"  # Executa a cada 5 minutos
+  schedule: "*/5 * * * *"  # Executa a cada 5 minutos
   jobTemplate:
     spec:
       template:
@@ -18,7 +18,7 @@ spec:
             - -c
             - |
               /bin/sh <<'EOF'
-              curl --create-dirs -O --output-dir /mnt/scripts https://raw.githubusercontent.com/Jefsuu/ya-data-project-with-dbt/dev/bronze_silver_spark_job.py
+              curl --create-dirs -O --output-dir /mnt/scripts https://raw.githubusercontent.com/Jefsuu/ya-data-project-with-dbt/dev/apps/scripts/bronze_silver_app.py
               EOF
             volumeMounts:
               - name: script-volume
@@ -69,10 +69,10 @@ spec:
             - -c
             - |
               /bin/sh <<'EOF'
-              pip install kafka-python==2.0.2 mysql-connector-python kubernetes==29.0.0 mysql-connector-python==8.3.0
               mkdir /scripts
               cp -R /mnt/scripts/* /scripts
-              python /scripts/bronze_silver_spark_job.py
+              pip install kafka-python==2.0.2 mysql-connector-python kubernetes==29.0.0 mysql-connector-python==8.3.0
+              python /scripts/bronze_silver_app.py
               EOF
             volumeMounts:
               - name: script-volume

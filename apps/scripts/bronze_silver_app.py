@@ -11,15 +11,6 @@ import base64
 config.load_incluster_config()
 k8s_api = client.CoreV1Api()
 
-# os.environ["BOOTSTRAP_SERVERS"] = 'localhost:9095'
-# os.environ["KAFKA_TOPIC"] = 'minio_bronze_events'
-# os.environ["KAFKA_GROUP_ID"] = 'spark_bronze_silver'
-# os.environ["MYSQL_DATABASE_HOST"] = "localhost"
-# os.environ["MYSQL_DATABASE"] = "topics"
-# os.environ["MYSQL_USER"] = "root"
-# os.environ["MYSQL_PASSWORD"] = "root1234"
-# os.environ["MINIO_SECRET_NAME"] = "minio-access-secret"
-
 process_queue = queue.Queue()
 event_queue = queue.Queue()
 job_queue = queue.Queue()
@@ -117,12 +108,6 @@ def init_spark_job(parameters, namespace="dev", main_application_file = "s3a://s
         "hive.metastore.uris": "thrift://hive-metastore:9083"
     }
     
-    # minio_secret = k8s_api.read_namespaced_secret(os.getenv("MINIO_SECRET_NAME", "minio-access-secret"), os.getenv("KUBE_NAMESPACE", "dev"))
-
-
-    # minio_secret_env = [{"name": "AWS_ACCESS_KEY", "value": base64.b64decode(minio_secret.data['accessKey']).decode()},
-    #                     {"name": "AWS_SECRET_KEY", "value": base64.b64decode(minio_secret.data['secretKey']).decode()}]
-    
     minio_secret_env = [{"name": "AWS_ACCESS_KEY", "value": os.getenv("AWS_ACCESS_KEY")},
                         {"name": "AWS_SECRET_KEY", "value": os.getenv("AWS_SECRET_KEY")}]
 
@@ -157,7 +142,7 @@ def init_spark_job(parameters, namespace="dev", main_application_file = "s3a://s
             },
             "executor": {
                 "cores": 1,
-                "instances": 1,
+                "instances": 2,
                 "memory": "512m",
                 "env": minio_secret_env
             },

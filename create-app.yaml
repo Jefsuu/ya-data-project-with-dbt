@@ -26,6 +26,11 @@ spec:
     targetRevision: dev
     directory:
       include: '*.yaml'
+  - path: apps/definitions
+    repoURL: https://github.com/Jefsuu/ya-data-project-with-dbt.git
+    targetRevision: dev
+    directory:
+      include: '*.yaml'
 
     
   

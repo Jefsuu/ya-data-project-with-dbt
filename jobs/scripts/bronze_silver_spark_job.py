@@ -2,6 +2,7 @@ import logging
 import os
 from pyspark.sql import SparkSession
 from pyspark.conf import SparkConf
+from pyspark.sql.functions import current_date
 import argparse
 import json
 
@@ -35,5 +36,7 @@ spark = (
 logger.info(args)
 read_options = json.loads(args.read_options)
 df = spark.read.options(**read_options).format(args.format).load(f"s3a://{args.bronze_path}")
+
+df.withColumn("_load_date_", current_date())
 
 df.write.mode('overwrite').format('parquet').option("path", f"s3a://{args.silver_path}").saveAsTable(args.table_name)
