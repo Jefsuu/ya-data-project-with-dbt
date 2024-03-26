@@ -1,70 +1,82 @@
-apiVersion: v1
-kind: Pod
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: my-python-pod
+  name: bronze-silver-job-cron
+  namespace: dev
 spec:
-  initContainers:
-  - name: install-dependencies
-    image: curlimages/curl:latest
-    command: 
-    - /bin/sh
-    - -c
-    - |
-      /bin/sh <<'EOF'
-      curl --create-dirs -O --output-dir /mnt/scripts https://raw.githubusercontent.com/Jefsuu/ya-data-project-with-dbt/dev/bronze_silver_spark_job.py
-    volumeMounts:
-      - name: script-volume
-        mountPath: /mnt/scripts
-  containers:
-  - name: my-python-container
-    image: python:3.8
-    resources:
-      limits:
-        memory: "512Mi"
-        cpu: "500m"
-      requests:
-        memory: "128Mi"
-        cpu: "100m"
-    env: 
-    - name: BOOTSTRAP_SERVERS
-      value: "dev-kafka:9092"
-    - name: KAFKA_TOPIC
-      value: "minio_bronze_events"
-    - name: KAFKA_GROUP_ID
-      value: "spark_bronze_silver"
-    - name: MYSQL_DATABASE_HOST
-      value: "mysql-metastore"
-    - name: MYSQL_DATABASE
-      value: "topics"
-    - name: MYSQL_USER
-      valueFrom:
-        secretKeyRef: 
-          name: "mysql-secret"
-          key: "user"
-    - name: MYSQL_PASSWORD
-      valueFrom:
-        secretKeyRef: 
-          name: "mysql-secret"
-          key: "password"
-    - name: MINIO_SECRET_NAME
-      value: "minio-access-secret"
-    command: 
-    - /bin/sh
-    - -c
-    - |
-      /bin/sh <<'EOF'
-      pip install kafka-python==2.0.2 mysql-connector-python kubernetes==29.0.0 mysql-connector-python==8.3.0
-      mkdir /scripts
-      cp -R /mnt/scripts/* /scripts
-      python /scripts/bronze_silver_spark_job.py
-      EOF
-    volumeMounts:
-      - name: script-volume
-        mountPath: /mnt/scripts
-  volumes:
-    - name: script-volume
-      emptyDir: {}
-  #     gitRepo:
-  #       repository: "https://github.com/Jefsuu/ya-data-project-with-dbt.git"
-  #       revision: dev
-  #       directory: "bronze_silver_spark_job.py"
+  schedule: "*/2 * * * *"  # Executa a cada 5 minutos
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: "Never"
+          initContainers:
+          - name: download-script
+            image: curlimages/curl:latest
+            command: 
+            - /bin/sh
+            - -c
+            - |
+              /bin/sh <<'EOF'
+              curl --create-dirs -O --output-dir /mnt/scripts https://raw.githubusercontent.com/Jefsuu/ya-data-project-with-dbt/dev/bronze_silver_spark_job.py
+              EOF
+            volumeMounts:
+              - name: script-volume
+                mountPath: /mnt/scripts
+          containers:
+          - name: start-bronze-silver-job
+            image: python:3.8
+            resources:
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+            env: 
+            - name: BOOTSTRAP_SERVERS
+              value: "dev-kafka:9092"
+            - name: KAFKA_TOPIC
+              value: "minio_bronze_events"
+            - name: KAFKA_GROUP_ID
+              value: "spark_bronze_silver"
+            - name: MYSQL_DATABASE_HOST
+              value: "mysql-metastore"
+            - name: MYSQL_DATABASE
+              value: "topics"
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef: 
+                  name: "mysql-secret"
+                  key: "user"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef: 
+                  name: "mysql-secret"
+                  key: "password"
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-access-secret
+                  key: accessKey
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-access-secret
+                  key: secretKey
+            command: 
+            - /bin/sh
+            - -c
+            - |
+              /bin/sh <<'EOF'
+              pip install kafka-python==2.0.2 mysql-connector-python kubernetes==29.0.0 mysql-connector-python==8.3.0
+              mkdir /scripts
+              cp -R /mnt/scripts/* /scripts
+              python /scripts/bronze_silver_spark_job.py
+              EOF
+            volumeMounts:
+              - name: script-volume
+                mountPath: /mnt/scripts
+          volumes:
+            - name: script-volume
+              emptyDir: {}

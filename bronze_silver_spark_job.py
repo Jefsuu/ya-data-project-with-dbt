@@ -117,12 +117,16 @@ def init_spark_job(parameters, namespace="dev", main_application_file = "s3a://s
         "hive.metastore.uris": "thrift://hive-metastore:9083"
     }
     
-    minio_secret = k8s_api.read_namespaced_secret(os.getenv("MINIO_SECRET_NAME", "minio-access-secret"), os.getenv("KUBE_NAMESPACE", "dev"))
+    # minio_secret = k8s_api.read_namespaced_secret(os.getenv("MINIO_SECRET_NAME", "minio-access-secret"), os.getenv("KUBE_NAMESPACE", "dev"))
 
 
-    minio_secret_env = [{"name": "AWS_ACCESS_KEY", "value": base64.b64decode(minio_secret.data['accessKey']).decode()},
-                        {"name": "AWS_SECRET_KEY", "value": base64.b64decode(minio_secret.data['secretKey']).decode()}]
+    # minio_secret_env = [{"name": "AWS_ACCESS_KEY", "value": base64.b64decode(minio_secret.data['accessKey']).decode()},
+    #                     {"name": "AWS_SECRET_KEY", "value": base64.b64decode(minio_secret.data['secretKey']).decode()}]
     
+    minio_secret_env = [{"name": "AWS_ACCESS_KEY", "value": os.getenv("AWS_ACCESS_KEY")},
+                        {"name": "AWS_SECRET_KEY", "value": os.getenv("AWS_SECRET_KEY")}]
+
+
     # Define a especificação do job Spark Python
     job_spec = {
         "kind": "SparkApplication",
